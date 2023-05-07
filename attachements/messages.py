@@ -8,4 +8,3 @@ def get_names(names: list):
     for name in names:
         names_msg += f"\n{name}"
     return names_msg
-
