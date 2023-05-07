@@ -28,9 +28,6 @@ class DoctorStates(StatesGroup):
     back = State()
     auto = State()
     start_treat = State()
-    choose_meds = State()
-    choose_proc = State()
-    create_treat = State()
 
 
 class PatientStates(StatesGroup):
