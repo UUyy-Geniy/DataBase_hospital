@@ -67,6 +67,5 @@ async def simptoms_list(message: Message, state: FSMContext):
     await state.update_data(patient=message.text)
     info = await state.get_data()
     await message.answer(text='Для успешного лечения ознакомьтесь внимательно с информацией пациента\n'
-                              'Симптомы:'+str(db.get_simptoms(info['patient'])+'\n'
-                                                                               'Диагноз:'+ str(db.get)))
+                              'Симптомы:'+str(db.get_simptoms(info['patient'])+'\nДиагноз:'+ str(db.get)))
 
