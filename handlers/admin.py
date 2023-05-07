@@ -46,7 +46,7 @@ async def diags(message: Message, state: FSMContext):
         db.set_patient_illness(patient_id, illness_id)
         departments_arr.append(db.list_possible_dep(illness_id))
     await message.answer('Диагнозы успешно установлены!')
-    await message.answer('Куда вы хотите положить пациента?' + msg.get_names(departments_arr))
+    await message.answer('Куда вы хотите положить пациента?' + msg.get_names(set(departments_arr)))
     await state.set_state(AdminStates.patient_depart)
 
 

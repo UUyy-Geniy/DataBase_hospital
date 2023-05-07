@@ -117,7 +117,7 @@ class DBHelper:
         illness_id = self._sql_query(query, ill_mame)
         return illness_id[0][0]
 
-    def set_ill_dep(self, ill_id: int, dep_id: int):
+    def set_ill_dep(self, dep_id: int, ill_id: int):
         query = f"""INSERT INTO Depart_illness(depart_id,illness_id) VALUES(?,?)"""
         self._sql_query(query, dep_id, ill_id)
 
@@ -158,9 +158,47 @@ class DBHelper:
         data = [elem[0] for elem in data]
         return data
 
-    def get_ill_from_pat(self, patient_id: int):
-        query = 'SELECT illness_id Patient_illness JOIN Patients ON patient_id = id WHERE patient_id = ?'
-        self._sql_query()
+    def get_ill_from_pat(self, name: str):
+        query = 'SELECT name FROM Illness WHERE id IN (SELECT illness_id FROM Patient_illness JOIN Patients ON ' \
+                'patient_id =(SELECT id FROM Patients WHERE name = ?) AND Patient_illness.start_data is NULL)'
+        data = self._sql_query(query, name)
+        data = [elem[0] for elem in data]
+        return data
+
+    def get_patients_with_ill(self):
+        query = 'SELECT name FROM Patients WHERE id IN (SELECT DISTINCT patient_id FROM Patient_illness WHERE ' \
+                'start_data is NULL)'
+        data = self._sql_query(query)
+        data = [elem[0] for elem in data]
+        return data
+
+    def get_meds(self):
+        query = """SELECT name FROM Medicines;"""
+        data = self._sql_query(query)
+        data = [elem[0] for elem in data]
+        return data
+
+    def get_proc(self):
+        query = """SELECT name FROM Procedures;"""
+        data = self._sql_query(query)
+        data = [elem[0] for elem in data]
+        return data
+
+    def get_doctor_and_dep(self):
+        query = """SELECT name,department_id FROM Doctors;"""
+        data = self._sql_query(query)
+        data = [elem for elem in data]
+        return data
+
+    def get_dep_from_doctor(self, name: str):
+        query = 'SELECT name FROM Departments WHERE id = (SELECT department_id FROM Doctors WHERE name = ?)'
+        data = self._sql_query(query, name)
+        return data[0][0]
+
+    def create_treat(self, start_data: str):
+        query = f"""INSERT INTO Treatment(start_data) VALUES(?)"""
+        self._sql_query(query, start_data)
+
 
 
 def create_db() -> DBHelper:
